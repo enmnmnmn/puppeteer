@@ -1,0 +1,28 @@
+{
+  "schemaVersion": 1,
+  "id": "puppeteer",
+  "version": "${version}",
+  "name": "Puppeteer",
+  "description": "傀儡师",
+  "authors": [],
+  "contact": {},
+  "license": "GPL-3.0",
+  "icon": "assets/puppeteer/icon.png",
+  "environment": "client",
+  "entrypoints": {
+    "client": [
+      "top.o_illusions.puppeteer.client.PuppeteerClient"
+    ],
+    "main": [
+      "top.o_illusions.puppeteer.Puppeteer"
+    ]
+  },
+  "mixins": [
+    "puppeteer.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=${loader_version}",
+    "fabric": "*",
+    "minecraft": "${minecraft_version}"
+  }
+}
