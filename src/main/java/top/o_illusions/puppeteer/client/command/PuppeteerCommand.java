@@ -92,8 +92,6 @@ public class PuppeteerCommand {
 
     public void pupp(MinecraftClient client) {
 
-
-
         ClientPlayerEntity player = client.player;
         if (intercept) {
             this.target = player.getWorld().getPlayerByUuid(this.uuid);
@@ -147,9 +145,7 @@ public class PuppeteerCommand {
                 targetPos.mul(new Matrix4f().rotation(client.gameRenderer.getCamera().getRotation()).invert());
                 targetPos.translate((float) targetPosL.x, (float) targetPosL.y, (float) targetPosL.z);
 
-                
-
-
+                player.sendMessage(Text.literal(targetPos.toString()));
 
             }
         }
