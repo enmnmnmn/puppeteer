@@ -2,5 +2,7 @@
   "puppeteer.commands.puppeteer.no_player": "非玩家单位执行",
   "puppeteer.commands.puppeteer.no_spectator": "非旁观玩家",
   "puppeteer.commands.puppeteer.no_input_player": "输入非/无玩家单位",
-  "puppeteer.commands.puppeteer.no_target_player": "未找到目标玩家单位"
+  "puppeteer.commands.puppeteer.no_target_player": "未找到目标玩家单位",
+  "puppeteer.commands.puppeteer.target_loss": "目标丢失",
+  "puppeteer.mixin.screen.game_menu_scrren.detach_butten": "脱离操控"
 }

@@ -5,15 +5,15 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.suggestion.SuggestionProvider;
 import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
-import net.minecraft.server.command.ServerCommandSource;
+import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 
 import java.util.Collection;
 import java.util.concurrent.CompletableFuture;
 
-public class PlayerSuggestionProvider implements SuggestionProvider<ServerCommandSource> {
+public class PlayerSuggestionProvider implements SuggestionProvider<FabricClientCommandSource> {
     @Override
     public CompletableFuture<Suggestions> getSuggestions(CommandContext context, SuggestionsBuilder builder) throws CommandSyntaxException {
-        ServerCommandSource source = (ServerCommandSource) context.getSource();
+        FabricClientCommandSource source = (FabricClientCommandSource) context.getSource();
 
         Collection<String> playerNames = source.getPlayerNames();
 
