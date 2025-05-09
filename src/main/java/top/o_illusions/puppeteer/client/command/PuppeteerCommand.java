@@ -10,10 +10,10 @@ import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.command.CommandRegistryAccess;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.text.Text;
-import net.minecraft.util.Hand;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import org.joml.Matrix4f;
+import org.joml.Vector4f;
 import top.o_illusions.puppeteer.client.command.suggestionprovider.PlayerSuggestionProvider;
 
 import java.util.List;
@@ -79,9 +79,6 @@ public class PuppeteerCommand {
 
 //        SpectatorMenu
 
-        player.interact(target, Hand.MAIN_HAND);
-
-
         source.sendFeedback(Text.literal("输入: %s".formatted(playerName)));
         source.sendFeedback(Text.literal("执行单位：%s".formatted(player.getName().getString())));
 
@@ -99,8 +96,6 @@ public class PuppeteerCommand {
                 player.sendMessage(Text.translatable("puppeteer.commands.puppeteer.target_loss"));
                 detach();
             }
-            Vec3d targetPosL = target.getPos();
-            player.setPos(targetPosL.x, targetPosL.y, targetPosL.z);
             Input input = player.input;
             tick++;
             tick %= 2;
@@ -141,11 +136,17 @@ public class PuppeteerCommand {
                     this.stop = true;
                 }
 
-                Matrix4f targetPos = new Matrix4f().translate(1, 1, 1);
-                targetPos.mul(new Matrix4f().rotation(client.gameRenderer.getCamera().getRotation()).invert());
-                targetPos.translate((float) targetPosL.x, (float) targetPosL.y, (float) targetPosL.z);
+                Vec3d targetPos = target.getEyePos();
+                Vector4f targetLookPos = new Vector4f(0, 0, -1, 1);
+                Matrix4f rotation = new Matrix4f().rotation(client.gameRenderer.getCamera().getRotation());
+                Matrix4f translate = new Matrix4f().translate((float) targetPos.x, (float) targetPos.y, (float) targetPos.z);
+                targetLookPos.mul(rotation);
+                targetLookPos.mul(100, 100, 100, 1);
+                player.sendMessage(Text.literal("[X:%f,Y:%f,Z:%f]".formatted(targetLookPos.x, targetLookPos.y, targetLookPos.z)));
+                targetLookPos.mul(translate);
+                player.sendMessage(Text.literal("[X:%f,Y:%f,Z:%f]".formatted(targetLookPos.x, targetLookPos.y, targetLookPos.z)));
 
-                player.sendMessage(Text.literal(targetPos.toString()));
+                player.networkHandler.sendCommand("player %s look at %f %f %f".formatted(target.getName().getString(), targetLookPos.x, targetLookPos.y, targetLookPos.z));
 
             }
         }
@@ -154,6 +155,7 @@ public class PuppeteerCommand {
     public void detach() {
         client.setCameraEntity(null);
         intercept = false;
+        target = null;
     }
 
 
