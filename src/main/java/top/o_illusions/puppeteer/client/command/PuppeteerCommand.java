@@ -1,6 +1,7 @@
 package top.o_illusions.puppeteer.client.command;
 
 import com.mojang.brigadier.CommandDispatcher;
+import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
@@ -27,6 +28,7 @@ public class PuppeteerCommand {
     UUID uuid = null;
     boolean intercept = false;
     int tick = 0;
+    int l = 2;
 
     boolean stop = true;
 
@@ -39,7 +41,14 @@ public class PuppeteerCommand {
                         .executes((context) -> execute(context.getSource(), StringArgumentType.getString(context, "playerName")))
                 ));
 
+        dispatcher.register(ClientCommandManager.literal("puppeteer_cfg")
+                .requires(source -> source.hasPermissionLevel(0))
+                .then(ClientCommandManager.argument("freq", IntegerArgumentType.integer(1, 20))
+                        .executes((context) -> {
+                            this.l = IntegerArgumentType.getInteger(context, "freq");
 
+                            return 1;
+                        })));
     }
 
     public int execute(FabricClientCommandSource source, String playerName) {
@@ -100,7 +109,7 @@ public class PuppeteerCommand {
             }
             Input input = player.input;
             tick++;
-            tick %= 2;
+            tick %= l;
             if (tick == 0) {
                 if (input.pressingForward) {
                     sendCommand(player, manipulation.getCommand(Manipulation.DUMMY_FORWARD).formatted(target.getName().getString()));
