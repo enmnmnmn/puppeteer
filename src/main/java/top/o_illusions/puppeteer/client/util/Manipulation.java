@@ -6,7 +6,7 @@ import java.util.Map;
 
 public class Manipulation {
     protected final Map<String, String> commands;
-    protected static Manipulation instance = null;
+    static Manipulation instance;
 
         public static String DUMMY_FORWARD = "dummy.forward";
         public static String DUMMY_BACKWARD = "dummy.backward";
@@ -18,7 +18,6 @@ public class Manipulation {
         public static String DUMMY_LOOK = "dummy.look";
 
     public Manipulation() {
-        instance = this;
         this.commands = new HashMap<>();
 
         this.commands.put(Manipulation.DUMMY_FORWARD, "player %s move forward");
@@ -29,28 +28,7 @@ public class Manipulation {
         this.commands.put(Manipulation.DUMMY_SNEAK, "player %s sneak");
         this.commands.put(Manipulation.DUMMY_STOP, "player %s stop");
         this.commands.put(Manipulation.DUMMY_LOOK, "player %s look at %f %f %f");
-
-        Input.register(Manipulation.DUMMY_FORWARD, () -> {
-            return false;
-        });
-        Input.register(Manipulation.DUMMY_BACKWARD, () -> {
-            return false;
-        });
-        Input.register(Manipulation.DUMMY_LEFT, () -> {
-            return false;
-        });
-        Input.register(Manipulation.DUMMY_RIGHT, () -> {
-            return false;
-        });
-        Input.register(Manipulation.DUMMY_JUMP, () -> {
-            return false;
-        });
-        Input.register(Manipulation.DUMMY_SNEAK, () -> {
-            return false;
-        });
-        Input.register(Manipulation.DUMMY_STOP, () -> {
-            return false;
-        });
+        instance = this;
     }
 
     public String getCommand(String key) {
@@ -62,6 +40,9 @@ public class Manipulation {
     }
 
     public static Manipulation getInstance() {
+        if (instance == null) {
+            return instance = new Manipulation();
+        }
         return instance;
     }
 }

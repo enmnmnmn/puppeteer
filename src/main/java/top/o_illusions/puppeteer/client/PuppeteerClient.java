@@ -3,17 +3,16 @@ package top.o_illusions.puppeteer.client;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
-import net.minecraft.client.network.ClientPlayerEntity;
 import top.o_illusions.puppeteer.client.command.PuppeteerCommand;
 import top.o_illusions.puppeteer.client.util.Manipulation;
 
 
 public class PuppeteerClient implements ClientModInitializer {
+    public Manipulation manipulation = new Manipulation();
     public static PuppeteerCommand puppeteerCommand = new PuppeteerCommand();
 
     @Override
     public void onInitializeClient() {
-        Manipulation manipulation = new Manipulation();
 
         ClientCommandRegistrationCallback.EVENT.register((dispatcher, registryAccess) -> {
             puppeteerCommand.register(dispatcher, registryAccess);
@@ -21,7 +20,6 @@ public class PuppeteerClient implements ClientModInitializer {
 
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
             puppeteerCommand.pupp(client);
-            ClientPlayerEntity player = client.player;
         });
     }
 

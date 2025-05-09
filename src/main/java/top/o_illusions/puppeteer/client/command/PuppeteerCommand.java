@@ -144,9 +144,7 @@ public class PuppeteerCommand {
                 Matrix4f translate = new Matrix4f().translate((float) targetPos.x, (float) targetPos.y, (float) targetPos.z);
                 targetLookPos.mul(rotation);
                 targetLookPos.mul(10000, 10000, 10000, 1);
-                player.sendMessage(Text.literal("[X:%f,Y:%f,Z:%f]".formatted(targetLookPos.x, targetLookPos.y, targetLookPos.z)));
                 targetLookPos.mul(translate);
-                player.sendMessage(Text.literal("[X:%f,Y:%f,Z:%f]".formatted(targetLookPos.x, targetLookPos.y, targetLookPos.z)));
 
                 sendCommand(player, manipulation.getCommand(Manipulation.DUMMY_LOOK).formatted(target.getName().getString(), targetLookPos.x, targetLookPos.y, targetLookPos.z));
             }
