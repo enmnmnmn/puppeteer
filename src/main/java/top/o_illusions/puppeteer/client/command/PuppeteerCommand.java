@@ -15,12 +15,14 @@ import net.minecraft.world.World;
 import org.joml.Matrix4f;
 import org.joml.Vector4f;
 import top.o_illusions.puppeteer.client.command.suggestionprovider.PlayerSuggestionProvider;
+import top.o_illusions.puppeteer.client.util.Manipulation;
 
 import java.util.List;
 import java.util.UUID;
 
 public class PuppeteerCommand {
     MinecraftClient client = MinecraftClient.getInstance();
+    Manipulation manipulation = Manipulation.getInstance();
     PlayerEntity target = null;
     UUID uuid = null;
     boolean intercept = false;
@@ -101,27 +103,27 @@ public class PuppeteerCommand {
             tick %= 2;
             if (tick == 0) {
                 if (input.pressingForward) {
-                    player.networkHandler.sendCommand("player %s move forward".formatted(target.getName().getString()));
+                    sendCommand(player, manipulation.getCommand(Manipulation.DUMMY_FORWARD).formatted(target.getName().getString()));
                     this.stop = false;
                 }
                 if (input.pressingBack) {
-                    player.networkHandler.sendCommand("player %s move backward".formatted(target.getName().getString()));
+                    sendCommand(player, manipulation.getCommand(Manipulation.DUMMY_BACKWARD).formatted(target.getName().getString()));
                     this.stop = false;
                 }
                 if (input.pressingLeft) {
-                    player.networkHandler.sendCommand("player %s move left".formatted(target.getName().getString()));
+                    sendCommand(player, manipulation.getCommand(Manipulation.DUMMY_LEFT).formatted(target.getName().getString()));
                     this.stop = false;
                 }
                 if (input.pressingRight) {
-                    player.networkHandler.sendCommand("player %s move right".formatted(target.getName().getString()));
+                    sendCommand(player, manipulation.getCommand(Manipulation.DUMMY_RIGHT).formatted(target.getName().getString()));
                     this.stop = false;
                 }
                 if (input.jumping) {
-                    player.networkHandler.sendCommand("player %s jump continuous".formatted(target.getName().getString()));
+                    sendCommand(player, manipulation.getCommand(Manipulation.DUMMY_JUMP).formatted(target.getName().getString()));
                     this.stop = false;
                 }
                 if (input.sneaking) {
-                    player.networkHandler.sendCommand("player %s sneak".formatted(target.getName().getString()));
+                    sendCommand(player, manipulation.getCommand(Manipulation.DUMMY_SNEAK).formatted(target.getName().getString()));
                     this.stop = false;
                 }
 
@@ -132,7 +134,7 @@ public class PuppeteerCommand {
                         || input.jumping
                         || input.sneaking
                         || this.stop)) {
-                    player.networkHandler.sendCommand("player %s stop".formatted(target.getName().getString()));
+                    sendCommand(player, manipulation.getCommand(Manipulation.DUMMY_STOP).formatted(target.getName().getString()));
                     this.stop = true;
                 }
 
@@ -141,15 +143,18 @@ public class PuppeteerCommand {
                 Matrix4f rotation = new Matrix4f().rotation(client.gameRenderer.getCamera().getRotation());
                 Matrix4f translate = new Matrix4f().translate((float) targetPos.x, (float) targetPos.y, (float) targetPos.z);
                 targetLookPos.mul(rotation);
-                targetLookPos.mul(100, 100, 100, 1);
+                targetLookPos.mul(10000, 10000, 10000, 1);
                 player.sendMessage(Text.literal("[X:%f,Y:%f,Z:%f]".formatted(targetLookPos.x, targetLookPos.y, targetLookPos.z)));
                 targetLookPos.mul(translate);
                 player.sendMessage(Text.literal("[X:%f,Y:%f,Z:%f]".formatted(targetLookPos.x, targetLookPos.y, targetLookPos.z)));
 
-                player.networkHandler.sendCommand("player %s look at %f %f %f".formatted(target.getName().getString(), targetLookPos.x, targetLookPos.y, targetLookPos.z));
-
+                sendCommand(player, manipulation.getCommand(Manipulation.DUMMY_LOOK).formatted(target.getName().getString(), targetLookPos.x, targetLookPos.y, targetLookPos.z));
             }
         }
+    }
+
+    public void sendCommand(ClientPlayerEntity player, String command) {
+        player.networkHandler.sendCommand(command);
     }
 
     public void detach() {
